@@ -1,0 +1,79 @@
+apply plugin: 'java'
+apply plugin: 'eclipse'
+apply plugin: 'idea'
+apply plugin: 'maven'
+
+ext {
+    javaVersion 				= '1.7'
+    javaEncoding 				= 'UTF-8'
+}
+
+sourceCompatibility = javaVersion
+
+group = "org.ninedragon"
+version = '1.0.1-SNAPSHOT'
+
+configurations {
+	provided
+}
+sourceSets {
+	main { compileClasspath += configurations.provided }
+}
+
+jar {
+    manifest {
+        attributes 	'Implementation-Title': archivesBaseName,
+                    'Implementation-Version': project.version,
+                    'CI-Build-Num': project.hasProperty('buildNum') ? project.getProperty('buildNum') : '-1',
+                    //'Build-SVN-Version': getRevision(),
+                    'System-JDK': "${System.getProperty('java.version')} (${System.getProperty('java.specification.vendor')})",
+                    'Build-JDK-Version': javaVersion,
+                    //'Gradle-Version': gradleVersion,
+                    'Created-By': 'ddakker@ezwel.com',
+                    'Create-Date': new Date().format('yyyy-MM-dd HH:mm:ss').toString()
+    }
+}
+
+
+
+repositories {
+    maven { url mavenRepositoryUrl + "/content/groups/public/" }
+}
+
+	
+List loggerSlf4jAndLogback = [
+    'ch.qos.logback:logback-core:1.1.2',
+    'ch.qos.logback:logback-classic:1.1.2',
+    'org.slf4j:slf4j-api:1.7.7',
+    'org.slf4j:jcl-over-slf4j:1.7.7',
+    'org.slf4j:log4j-over-slf4j:1.7.7',
+    'org.codehaus.janino:janino:2.7.8'
+]
+	
+dependencies {
+	provided loggerSlf4jAndLogback
+	provided 'org.eclipse.jetty.alpn:alpn-api:1.1.2.v20150522'
+	provided 'org.eclipse.jetty.npn:npn-api:1.1.1.v20141010'
+	provided 'io.netty:netty-tcnative:1.1.33.Fork13'
+	provided 'org.bouncycastle:bcprov-jdk15on:1.54'
+	provided 'org.bouncycastle:bcpkix-jdk15on:1.54'
+	provided 'org.jboss.modules:jboss-modules:1.5.1.Final' 
+	
+	//providedCompile
+	//provided 
+}
+
+test {
+    systemProperties 'property': 'value'
+}
+
+uploadArchives {
+    repositories.mavenDeployer {
+        repository(url: mavenRepositoryUrl + "/content/repositories/releases/") {
+            authentication(userName: mavenUser, password: mavenPassword)
+        }
+        snapshotRepository(url: mavenRepositoryUrl + "/content/repositories/snapshots/") {
+            authentication(userName: mavenUser, password: mavenPassword)
+        }
+    }
+}

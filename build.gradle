@@ -1,0 +1,43 @@
+apply plugin: 'java'
+
+
+
+ext {
+    javaVersion 				= '1.7'
+    javaEncoding 				= 'UTF-8'
+}
+
+sourceCompatibility = javaVersion
+
+group = "org.ninedragon"
+version = '1.0.0-SNAPSHOT'
+
+configurations {
+	provided
+}
+sourceSets {
+	main { compileClasspath += configurations.provided }
+}
+
+jar {
+    manifest {
+        attributes 	'Implementation-Title': archivesBaseName,
+                    'Implementation-Version': project.version,
+                    'CI-Build-Num': project.hasProperty('buildNum') ? project.getProperty('buildNum') : '-1',
+                    //'Build-SVN-Version': getRevision(),
+                    'System-JDK': "${System.getProperty('java.version')} (${System.getProperty('java.specification.vendor')})",
+                    'Build-JDK-Version': javaVersion,
+                    //'Gradle-Version': gradleVersion,
+                    'Created-By': 'ddakker@ezwel.com',
+                    'Create-Date': new Date().format('yyyy-MM-dd HH:mm:ss').toString()
+    }
+}
+
+
+
+repositories {
+    maven { url mavenRepositoryUrl + "/content/groups/public/" }
+}
+
+	
+

@@ -1,0 +1,54 @@
+apply plugin: 'java'
+apply plugin: 'eclipse'
+apply plugin: 'idea'
+
+sourceCompatibility = 1.7
+version = '4.0.34.Final-rebuild'
+jar {
+    manifest {
+        attributes 	'Implementation-Title': archivesBaseName,
+                    'Implementation-Version': project.version,
+                    'CI-Build-Num': project.hasProperty('buildNum') ? project.getProperty('buildNum') : '-1',
+                    'System-JDK': "${System.getProperty('java.version')} (${System.getProperty('java.specification.vendor')})",
+                    //'Build-JDK-Version': javaVersion,
+                    //'Gradle-Version': gradleVersion,
+                    'Created-By': 'ddakker@ezwel.com',
+                    'Create-Date': new Date().format('yyyy-MM-dd HH:mm:ss').toString()
+    }
+}
+
+repositories {
+    mavenCentral()
+}
+
+List loggerSlf4jAndLogback = [
+    'ch.qos.logback:logback-core:1.1.2',
+    'ch.qos.logback:logback-classic:1.1.2',
+    'org.slf4j:slf4j-api:1.7.7',
+    'org.slf4j:jcl-over-slf4j:1.7.7',
+    'org.slf4j:log4j-over-slf4j:1.7.7',
+    'org.codehaus.janino:janino:2.7.8'
+]
+	
+dependencies {
+	compile loggerSlf4jAndLogback
+	compile 'org.eclipse.jetty.alpn:alpn-api:1.1.2.v20150522'
+	compile 'org.eclipse.jetty.npn:npn-api:1.1.1.v20141010'
+	compile 'io.netty:netty-tcnative:1.1.33.Fork13'
+	compile 'org.bouncycastle:bcprov-jdk15on:1.54'
+	compile 'org.bouncycastle:bcpkix-jdk15on:1.54'
+	
+	
+}
+
+test {
+    systemProperties 'property': 'value'
+}
+
+uploadArchives {
+    repositories {
+       flatDir {
+           dirs 'repos'
+       }
+    }
+}

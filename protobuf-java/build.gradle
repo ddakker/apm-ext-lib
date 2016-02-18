@@ -1,0 +1,39 @@
+apply plugin: 'java'
+apply plugin: 'eclipse'
+apply plugin: 'idea'
+
+sourceCompatibility = 1.7
+version = '2.5.0-rebuild'
+jar {
+    manifest {
+        attributes 	'Implementation-Title': archivesBaseName,
+                    'Implementation-Version': project.version,
+                    'CI-Build-Num': project.hasProperty('buildNum') ? project.getProperty('buildNum') : '-1',
+                    'System-JDK': "${System.getProperty('java.version')} (${System.getProperty('java.specification.vendor')})",
+                    //'Build-JDK-Version': javaVersion,
+                    //'Gradle-Version': gradleVersion,
+                    'Created-By': 'ddakker@ezwel.com',
+                    'Create-Date': new Date().format('yyyy-MM-dd HH:mm:ss').toString()
+    }
+}
+
+repositories {
+    mavenCentral()
+}
+
+	
+dependencies {
+
+}
+
+test {
+    systemProperties 'property': 'value'
+}
+
+uploadArchives {
+    repositories {
+       flatDir {
+           dirs 'repos'
+       }
+    }
+}
